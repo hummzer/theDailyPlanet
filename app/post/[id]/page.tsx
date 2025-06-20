@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import { PrismaClient } from '@prisma/client';
 import { notFound } from 'next/navigation';
 import { FaArrowLeft } from 'react-icons/fa';
@@ -17,7 +18,7 @@ async function getPost(id: string) {
 
 function parseContent(content: string) {
   const lines = content.split('\n');
-  let result: JSX.Element[] = [];
+  const result: React.ReactNode[] = [];
   let inCodeBlock = false;
   let codeContent: string[] = [];
 
@@ -44,8 +45,17 @@ function parseContent(content: string) {
 
     const imageMatch = line.match(/!\[([^\]]*)\]\(([^)]+)\)/);
     if (imageMatch) {
-      const [, alt, url] = imageMatch;
-      result.push(<img key={`img-${index}`} src={url} alt={alt} />);
+      const [, alt, src] = imageMatch;
+      result.push(
+        <Image
+          key={`img-${index}`}
+          src={src}
+          alt={alt}
+          width={672}
+          height={400}
+          className="max-w-full h-auto rounded-md my-2"
+        />
+      );
       return;
     }
 
